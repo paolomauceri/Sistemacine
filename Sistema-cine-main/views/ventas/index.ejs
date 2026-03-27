@@ -1,0 +1,42 @@
+<div class="header-actions">
+    <h2><i class="fas fa-cash-register"></i> Ventas</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="/ventas/rapida" class="btn btn-success"><i class="fas fa-bolt"></i> Venta Rapida</a>
+    </div>
+</div>
+
+<div class="method-badge">
+    <span class="badge get">GET</span>
+    <span class="badge post">POST</span>
+    <span class="badge put">PUT</span>
+    <span class="badge delete">DELETE</span>
+</div>
+
+<% if (ventas.length === 0) { %>
+    <div class="alert alert-info"><i class="fas fa-info-circle"></i> No hay ventas registradas.</div>
+<% } else { %>
+    <div class="data-grid">
+        <% ventas.forEach(venta => { %>
+            <div class="card">
+                <div class="card-header">
+                    <h3><%= venta.pelicula_titulo %></h3>
+                    <span class="card-badge">ID: <%= venta.id %></span>
+                </div>
+                <div class="card-body">
+                    <p><i class="fas fa-ticket-alt"></i><strong>Entrada:</strong> #<%= venta.entrada_id %></p>
+                    <p><i class="fas fa-user"></i><strong>Cliente:</strong> <%= venta.cliente_nombre || 'Publico general' %></p>
+                    <p><i class="fas fa-dollar-sign"></i><strong>Subtotal:</strong> $<%= Number(venta.subtotal).toFixed(2) %></p>
+                    <p><i class="fas fa-percentage"></i><strong>Descuento:</strong> $<%= Number(venta.descuento).toFixed(2) %></p>
+                    <p><i class="fas fa-receipt"></i><strong>Total:</strong> $<%= Number(venta.total).toFixed(2) %></p>
+                    <p><i class="fas fa-credit-card"></i><strong>Pago:</strong> <%= venta.metodo_pago %></p>
+                </div>
+                <div class="card-footer">
+                    <a href="/ventas/<%= venta.id %>/editar" class="btn btn-warning"><i class="fas fa-edit"></i> Editar</a>
+                    <form action="/ventas/<%= venta.id %>?_method=DELETE" method="POST" style="flex:1;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar esta venta?')"><i class="fas fa-trash"></i> Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+<% } %>

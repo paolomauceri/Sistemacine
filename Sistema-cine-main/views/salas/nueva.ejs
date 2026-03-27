@@ -1,0 +1,80 @@
+﻿<!-- views/salas/nueva.ejs -->
+<div class="form-container">
+    <div class="form-title">
+        <h2>
+            <i class="fas fa-plus-circle"></i>
+            Agregar Nueva Sala
+        </h2>
+        <p>Complete los datos para registrar una nueva sala de cine</p>
+    </div>
+
+    <div class="method-badge">
+        <span class="badge post">Método: POST</span>
+    </div>
+
+    <form action="/salas" method="POST">
+        <div class="form-group">
+            <label for="nombre">
+                <i class="fas fa-tag"></i>
+                Nombre de la sala
+            </label>
+            <input type="text" class="form-control" id="nombre" name="nombre" 
+                   placeholder="Ej: Sala IMAX, Sala VIP, Sala 3D" value="<%= sala.nombre || '' %>" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="capacidad">
+                    <i class="fas fa-users"></i>
+                    Capacidad
+                </label>
+                <input type="number" class="form-control" id="capacidad" name="capacidad" 
+                       placeholder="Ej: 200" min="1" value="<%= sala.capacidad || '' %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tipo">
+                    <i class="fas fa-film"></i>
+                    Tipo de sala
+                </label>
+                <select class="form-control" id="tipo" name="tipo" required>
+                    <option value="">Seleccione tipo</option>
+                    <option value="2D" <%= sala.tipo === '2D' ? 'selected' : '' %>>2D</option>
+                    <option value="3D" <%= sala.tipo === '3D' ? 'selected' : '' %>>3D</option>
+                    <option value="VIP" <%= sala.tipo === 'VIP' ? 'selected' : '' %>>VIP</option>
+                    <option value="IMAX" <%= sala.tipo === 'IMAX' ? 'selected' : '' %>>IMAX</option>
+                    <option value="4DX" <%= sala.tipo === '4DX' ? 'selected' : '' %>>4DX</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="tiene_dolby">
+                <i class="fas fa-volume-up"></i>
+                ¿Tiene sistema Dolby?
+            </label>
+            <select class="form-control" id="tiene_dolby" name="tiene_dolby">
+                <option value="1" <%= sala.tiene_dolby == 1 ? 'selected' : '' %>>Sí</option>
+                <option value="0" <%= sala.tiene_dolby == 0 ? 'selected' : '' %>>No</option>
+            </select>
+        </div>
+
+        <% if (error_msg) { %>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                <%= error_msg %>
+            </div>
+        <% } %>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Guardar Sala (POST)
+            </button>
+            <a href="/salas" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>

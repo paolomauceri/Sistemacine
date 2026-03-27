@@ -1,0 +1,99 @@
+﻿<!-- views/peliculas/nueva.ejs -->
+<div class="form-container">
+    <div class="form-title">
+        <h2>
+            <i class="fas fa-plus-circle"></i>
+            Agregar Nueva Película
+        </h2>
+        <p>Completa los datos para registrar una nueva película</p>
+    </div>
+
+    <div class="method-badge">
+        <span class="badge post">Método: POST</span>
+    </div>
+
+    <form action="/peliculas" method="POST">
+        <div class="form-group">
+            <label for="titulo">
+                <i class="fas fa-heading"></i>
+                Título de la película
+            </label>
+            <input type="text" class="form-control" id="titulo" name="titulo" 
+                   placeholder="Ej: Avatar: El camino del agua" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="genero">
+                    <i class="fas fa-tag"></i>
+                    Género
+                </label>
+                <select class="form-control" id="genero" name="genero" required>
+                    <option value="">Selecciona un género</option>
+                    <option value="Acción">Acción</option>
+                    <option value="Comedia">Comedia</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Ciencia Ficción">Ciencia Ficción</option>
+                    <option value="Terror">Terror</option>
+                    <option value="Animación">Animación</option>
+                    <option value="Aventura">Aventura</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="duracion">
+                    <i class="fas fa-hourglass-half"></i>
+                    Duración (minutos)
+                </label>
+                <input type="number" class="form-control" id="duracion" name="duracion" 
+                       placeholder="Ej: 120" min="1" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="clasificacion">
+                <i class="fas fa-certificate"></i>
+                Clasificación
+            </label>
+            <select class="form-control" id="clasificacion" name="clasificacion" required>
+                <option value="">Selecciona clasificación</option>
+                <option value="G">G - Todo público</option>
+                <option value="PG">PG - Guía parental</option>
+                <option value="PG-13">PG-13 - Mayores de 13</option>
+                <option value="R">R - Restringido</option>
+                <option value="NC-17">NC-17 - Adultos</option>
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Guardar Película (POST)
+            </button>
+            <a href="/peliculas" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+.btn-secondary {
+    background: var(--gray-color);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: var(--transition);
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-3px);
+}
+</style>

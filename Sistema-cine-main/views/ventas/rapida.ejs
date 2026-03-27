@@ -1,0 +1,509 @@
+<div class="form-container">
+    <div class="form-title">
+        <h2><i class="fas fa-bolt"></i> Venta Rapida</h2>
+        <p>Crea entrada y venta en un solo paso</p>
+        <p>Subtotal y total se calculan automaticamente segun funcion y cantidad.</p>
+    </div>
+
+    <div class="method-badge">
+        <span class="badge post">POST</span>
+    </div>
+
+    <form action="/ventas/rapida" method="POST" id="ventaRapidaForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="funcion_id"><i class="fas fa-calendar-alt"></i> Funcion</label>
+                <select id="funcion_id" name="funcion_id" class="form-control" required>
+                    <option value="">Selecciona una funcion</option>
+                    <% funciones.forEach(funcion => { %>
+                        <option
+                            value="<%= funcion.id %>"
+                            data-precio="<%= Number(funcion.precio_base).toFixed(2) %>"
+                            <%= String(ventaRapida.funcion_id) === String(funcion.id) ? 'selected' : '' %>
+                        >
+                            #<%= funcion.id %> - <%= funcion.titulo %> - <%= funcion.fecha %> <%= funcion.hora %> - <%= funcion.sala_nombre %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cliente_id"><i class="fas fa-user"></i> Cliente</label>
+                <select id="cliente_id" name="cliente_id" class="form-control">
+                    <option value="">Publico general</option>
+                    <% clientes.forEach(cliente => { %>
+                        <option value="<%= cliente.id %>" <%= String(ventaRapida.cliente_id) === String(cliente.id) ? 'selected' : '' %>><%= cliente.nombre %></option>
+                    <% }) %>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cantidad"><i class="fas fa-users"></i> Cantidad</label>
+                <input type="number" id="cantidad" name="cantidad" class="form-control" min="1" value="<%= ventaRapida.cantidad || 1 %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="metodo_pago"><i class="fas fa-credit-card"></i> Metodo de pago</label>
+                <select id="metodo_pago" name="metodo_pago" class="form-control" required>
+                    <option value="EFECTIVO" <%= ventaRapida.metodo_pago === 'EFECTIVO' ? 'selected' : '' %>>EFECTIVO</option>
+                    <option value="TARJETA" <%= ventaRapida.metodo_pago === 'TARJETA' ? 'selected' : '' %>>TARJETA</option>
+                    <option value="TRANSFERENCIA" <%= ventaRapida.metodo_pago === 'TRANSFERENCIA' ? 'selected' : '' %>>TRANSFERENCIA</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="snack_id"><i class="fas fa-popcorn"></i> Snack</label>
+                <select id="snack_id" name="snack_id" class="form-control">
+                    <option value="">Sin snack</option>
+                    <% snacks.forEach(snack => { %>
+                        <option
+                            value="<%= snack.id %>"
+                            data-precio="<%= Number(snack.precio).toFixed(2) %>"
+                            <%= String(ventaRapida.snack_id) === String(snack.id) ? 'selected' : '' %>
+                        >
+                            <%= snack.nombre %> - $<%= Number(snack.precio).toFixed(2) %> (Stock: <%= snack.stock %>)
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="snack_cantidad"><i class="fas fa-sort-numeric-up"></i> Cantidad snack</label>
+                <input type="number" id="snack_cantidad" name="snack_cantidad" class="form-control" min="0" value="<%= ventaRapida.snack_cantidad || 0 %>">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="bebida_id"><i class="fas fa-glass-cheers"></i> Bebida</label>
+                <select id="bebida_id" name="bebida_id" class="form-control">
+                    <option value="">Sin bebida</option>
+                    <% bebidas.forEach(bebida => { %>
+                        <option
+                            value="<%= bebida.id %>"
+                            data-precio="<%= Number(bebida.precio).toFixed(2) %>"
+                            <%= String(ventaRapida.bebida_id) === String(bebida.id) ? 'selected' : '' %>
+                        >
+                            <%= bebida.nombre %> - $<%= Number(bebida.precio).toFixed(2) %> (Stock: <%= bebida.stock %>)
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bebida_cantidad"><i class="fas fa-sort-numeric-up"></i> Cantidad bebida</label>
+                <input type="number" id="bebida_cantidad" name="bebida_cantidad" class="form-control" min="0" value="<%= ventaRapida.bebida_cantidad || 0 %>">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="asientos"><i class="fas fa-couch"></i> Asientos</label>
+            <input type="text" id="asientos" name="asientos" class="form-control" placeholder="Ej: A1,A2" value="<%= ventaRapida.asientos || '' %>">
+            <small style="color: var(--gray-color);">No repitas asientos. Formato recomendado: A1,A2,A3</small>
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-th"></i> Mapa de Asientos</label>
+            <div class="seat-legend">
+                <span class="seat-pill seat-available">Disponible</span>
+                <span class="seat-pill seat-sold">Vendido/Reservado</span>
+                <span class="seat-pill seat-selected">Seleccionado</span>
+            </div>
+            <div id="seatMap" class="seat-map" aria-live="polite">
+                <p class="seat-map-hint">Selecciona una funcion para ver asientos.</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion"><i class="fas fa-align-left"></i> Descripcion</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" placeholder="Detalle opcional"><%= ventaRapida.descripcion || '' %></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="subtotal_preview"><i class="fas fa-calculator"></i> Subtotal</label>
+                <input type="text" id="subtotal_preview" class="form-control" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="descuento"><i class="fas fa-percentage"></i> Descuento</label>
+                <input type="number" id="descuento" name="descuento" class="form-control" step="0.01" min="0" max="999999" value="<%= ventaRapida.descuento || 0 %>">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="impuesto"><i class="fas fa-file-invoice-dollar"></i> Impuesto</label>
+                <input type="number" id="impuesto" name="impuesto" class="form-control" step="0.01" min="0" max="999999" value="<%= ventaRapida.impuesto || 0 %>">
+            </div>
+
+            <div class="form-group">
+                <label for="total_preview"><i class="fas fa-receipt"></i> Total</label>
+                <input type="text" id="total_preview" class="form-control" readonly>
+            </div>
+        </div>
+
+        <% if (error_msg) { %>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                <%= error_msg %>
+            </div>
+        <% } %>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Registrar Venta Rapida</button>
+            <a href="/ventas" class="btn btn-warning"><i class="fas fa-times"></i> Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.seat-legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.seat-pill {
+    color: white;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.seat-available {
+    background: #28a745;
+}
+
+.seat-sold {
+    background: #dc3545;
+}
+
+.seat-selected {
+    background: #1f7a3f;
+}
+
+.seat-map {
+    background: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.seat-screen {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.seat-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.seat-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 20px 1fr;
+    align-items: center;
+    gap: 6px;
+}
+
+.seat-row-label {
+    font-weight: 700;
+    color: var(--dark-color);
+    text-align: center;
+}
+
+.seat-row-group {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(42px, 1fr));
+    gap: 6px;
+}
+
+.seat-row-aisle {
+    height: 100%;
+    border-left: 2px dashed #cbd5e0;
+    opacity: 0.9;
+}
+
+.seat-btn {
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    padding: 8px 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    min-height: 36px;
+}
+
+.seat-btn.available {
+    background: #28a745;
+}
+
+.seat-btn.sold {
+    background: #dc3545;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+.seat-btn.selected {
+    background: #1f7a3f;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.6);
+}
+
+.seat-map-hint {
+    color: var(--gray-color);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .seat-row {
+        grid-template-columns: 24px 1fr 14px 1fr;
+        gap: 4px;
+    }
+
+    .seat-row-group {
+        grid-template-columns: repeat(5, minmax(34px, 1fr));
+        gap: 4px;
+    }
+}
+</style>
+
+<script>
+    (function () {
+        const funcionSelect = document.getElementById('funcion_id');
+        const cantidadInput = document.getElementById('cantidad');
+        const descuentoInput = document.getElementById('descuento');
+        const impuestoInput = document.getElementById('impuesto');
+        const snackSelect = document.getElementById('snack_id');
+        const snackCantidadInput = document.getElementById('snack_cantidad');
+        const bebidaSelect = document.getElementById('bebida_id');
+        const bebidaCantidadInput = document.getElementById('bebida_cantidad');
+        const subtotalPreview = document.getElementById('subtotal_preview');
+        const totalPreview = document.getElementById('total_preview');
+        const asientosInput = document.getElementById('asientos');
+        const seatMap = document.getElementById('seatMap');
+        let occupiedSeats = new Set();
+        let selectedSeats = new Set();
+        let allSeats = [];
+
+        function toNumber(value) {
+            const parsed = Number.parseFloat(value);
+            return Number.isNaN(parsed) ? 0 : parsed;
+        }
+
+        function parseSeatText(value) {
+            if (!value) {
+                return [];
+            }
+
+            return [...new Set(
+                String(value)
+                    .split(',')
+                    .map(function (item) { return item.trim().toUpperCase(); })
+                    .filter(Boolean)
+            )];
+        }
+
+        function syncAsientosInput() {
+            const values = Array.from(selectedSeats);
+            asientosInput.value = values.join(',');
+        }
+
+        function parseSeatCode(seat) {
+            const match = /^([A-Z]+)(\d+)$/.exec(seat);
+            if (!match) {
+                return null;
+            }
+
+            return {
+                row: match[1],
+                number: Number.parseInt(match[2], 10),
+                seat: seat
+            };
+        }
+
+        function sortRows(a, b) {
+            if (a.length !== b.length) {
+                return a.length - b.length;
+            }
+
+            return a.localeCompare(b);
+        }
+
+        function renderSeatGrid() {
+            if (!allSeats.length) {
+                seatMap.innerHTML = '<p class="seat-map-hint">No hay asientos configurados para esta funcion.</p>';
+                return;
+            }
+
+            const rows = {};
+            allSeats.forEach(function (seat) {
+                const parsed = parseSeatCode(seat);
+                if (!parsed) {
+                    return;
+                }
+
+                if (!rows[parsed.row]) {
+                    rows[parsed.row] = [];
+                }
+
+                rows[parsed.row].push(parsed);
+            });
+
+            const rowKeys = Object.keys(rows).sort(sortRows);
+
+            const htmlRows = rowKeys.map(function (rowKey) {
+                const seats = rows[rowKey].sort(function (x, y) { return x.number - y.number; });
+                const maxNum = seats.reduce(function (acc, curr) { return Math.max(acc, curr.number); }, 0);
+                const splitAt = Math.ceil(maxNum / 2);
+                const leftSeats = seats.filter(function (item) { return item.number <= splitAt; });
+                const rightSeats = seats.filter(function (item) { return item.number > splitAt; });
+
+                function renderBtn(item) {
+                    const isSold = occupiedSeats.has(item.seat);
+                    const isSelected = selectedSeats.has(item.seat);
+                    const classes = ['seat-btn'];
+
+                    if (isSold) {
+                        classes.push('sold');
+                    } else if (isSelected) {
+                        classes.push('selected');
+                    } else {
+                        classes.push('available');
+                    }
+
+                    return '<button type="button" data-seat="' + item.seat + '" class="' + classes.join(' ') + '" ' + (isSold ? 'disabled' : '') + '>' + item.seat + '</button>';
+                }
+
+                return [
+                    '<div class="seat-row">',
+                    '<div class="seat-row-label">' + rowKey + '</div>',
+                    '<div class="seat-row-group">' + leftSeats.map(renderBtn).join('') + '</div>',
+                    '<div class="seat-row-aisle" aria-hidden="true"></div>',
+                    '<div class="seat-row-group">' + rightSeats.map(renderBtn).join('') + '</div>',
+                    '</div>'
+                ].join('');
+            }).join('');
+
+            seatMap.innerHTML = '<div class="seat-screen">PANTALLA</div><div class="seat-rows">' + htmlRows + '</div>';
+
+            seatMap.querySelectorAll('.seat-btn.available, .seat-btn.selected').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const seat = btn.dataset.seat;
+                    if (selectedSeats.has(seat)) {
+                        selectedSeats.delete(seat);
+                    } else {
+                        selectedSeats.add(seat);
+                    }
+
+                    syncAsientosInput();
+                    if (selectedSeats.size > 0) {
+                        cantidadInput.value = selectedSeats.size;
+                    }
+                    calcularTotales();
+                    renderSeatGrid();
+                });
+            });
+        }
+
+        async function cargarMapaAsientos() {
+            const funcionId = funcionSelect.value;
+            selectedSeats = new Set(parseSeatText(asientosInput.value));
+
+            if (!funcionId) {
+                allSeats = [];
+                occupiedSeats = new Set();
+                seatMap.innerHTML = '<p class="seat-map-hint">Selecciona una funcion para ver asientos.</p>';
+                return;
+            }
+
+            seatMap.innerHTML = '<p class="seat-map-hint">Cargando asientos...</p>';
+
+            try {
+                const response = await fetch('/ventas/funciones/' + funcionId + '/asientos');
+                const payload = await response.json();
+
+                if (!response.ok || !payload.success) {
+                    throw new Error(payload.error || 'No se pudo cargar el mapa de asientos');
+                }
+
+                allSeats = payload.data.asientos || [];
+                occupiedSeats = new Set(payload.data.ocupados || []);
+
+                selectedSeats.forEach(function (seat) {
+                    if (occupiedSeats.has(seat)) {
+                        selectedSeats.delete(seat);
+                    }
+                });
+
+                syncAsientosInput();
+                renderSeatGrid();
+            } catch (error) {
+                seatMap.innerHTML = '<p class="seat-map-hint">Error al cargar asientos.</p>';
+            }
+        }
+
+        function calcularTotales() {
+            const precio = toNumber(funcionSelect.selectedOptions[0]?.dataset?.precio);
+            const cantidad = Math.max(1, Number.parseInt(cantidadInput.value || '1', 10));
+            const snackPrecio = toNumber(snackSelect.selectedOptions[0]?.dataset?.precio);
+            const snackCantidad = Math.max(0, Number.parseInt(snackCantidadInput.value || '0', 10));
+            const bebidaPrecio = toNumber(bebidaSelect.selectedOptions[0]?.dataset?.precio);
+            const bebidaCantidad = Math.max(0, Number.parseInt(bebidaCantidadInput.value || '0', 10));
+            const descuento = Math.max(0, toNumber(descuentoInput.value));
+            const impuesto = Math.max(0, toNumber(impuestoInput.value));
+
+            const subtotalEntradas = precio * cantidad;
+            const subtotalSnack = snackPrecio * snackCantidad;
+            const subtotalBebida = bebidaPrecio * bebidaCantidad;
+            const subtotal = subtotalEntradas + subtotalSnack + subtotalBebida;
+            const total = subtotal - descuento + impuesto;
+
+            subtotalPreview.value = subtotal.toFixed(2);
+            totalPreview.value = Math.max(total, 0).toFixed(2);
+        }
+
+        ['change', 'input'].forEach(function (eventName) {
+            funcionSelect.addEventListener(eventName, calcularTotales);
+            cantidadInput.addEventListener(eventName, calcularTotales);
+            snackSelect.addEventListener(eventName, calcularTotales);
+            snackCantidadInput.addEventListener(eventName, calcularTotales);
+            bebidaSelect.addEventListener(eventName, calcularTotales);
+            bebidaCantidadInput.addEventListener(eventName, calcularTotales);
+            descuentoInput.addEventListener(eventName, calcularTotales);
+            impuestoInput.addEventListener(eventName, calcularTotales);
+        });
+
+        funcionSelect.addEventListener('change', cargarMapaAsientos);
+
+        asientosInput.addEventListener('input', function () {
+            selectedSeats = new Set(parseSeatText(asientosInput.value).filter(function (seat) {
+                return !occupiedSeats.has(seat);
+            }));
+            if (selectedSeats.size > 0) {
+                cantidadInput.value = selectedSeats.size;
+                calcularTotales();
+            }
+            renderSeatGrid();
+        });
+
+        calcularTotales();
+        cargarMapaAsientos();
+    })();
+</script>

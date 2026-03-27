@@ -1,0 +1,6 @@
+﻿PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=sistema_cine
+SESSION_SECRET=secreto_super_seguro_cine_2026

@@ -1,0 +1,70 @@
+<div class="form-container">
+    <div class="form-title">
+        <h2><i class="fas fa-edit"></i> Editar Entrada</h2>
+        <p>Actualiza los datos de la entrada</p>
+    </div>
+
+    <form action="/entradas/<%= entrada.id %>?_method=PUT" method="POST">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="funcion_id"><i class="fas fa-calendar-alt"></i> Funcion</label>
+                <select id="funcion_id" name="funcion_id" class="form-control" required>
+                    <% funciones.forEach(f => { %>
+                        <option value="<%= f.id %>" <%= String(entrada.funcion_id) === String(f.id) ? 'selected' : '' %>>#<%= f.id %> - <%= f.titulo %> - <%= f.fecha %> <%= f.hora %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cliente_id"><i class="fas fa-user"></i> Cliente</label>
+                <select id="cliente_id" name="cliente_id" class="form-control">
+                    <option value="">Publico general</option>
+                    <% clientes.forEach(c => { %>
+                        <option value="<%= c.id %>" <%= String(entrada.cliente_id) === String(c.id) ? 'selected' : '' %>><%= c.nombre %></option>
+                    <% }) %>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cantidad"><i class="fas fa-users"></i> Cantidad</label>
+                <input type="number" min="1" id="cantidad" name="cantidad" class="form-control" required value="<%= entrada.cantidad %>">
+            </div>
+            <div class="form-group">
+                <label for="asientos"><i class="fas fa-couch"></i> Asientos</label>
+                <input type="text" id="asientos" name="asientos" class="form-control" value="<%= entrada.asientos || '' %>">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="metodo_pago"><i class="fas fa-credit-card"></i> Metodo de pago</label>
+                <select id="metodo_pago" name="metodo_pago" class="form-control" required>
+                    <option value="EFECTIVO" <%= entrada.metodo_pago === 'EFECTIVO' ? 'selected' : '' %>>EFECTIVO</option>
+                    <option value="TARJETA" <%= entrada.metodo_pago === 'TARJETA' ? 'selected' : '' %>>TARJETA</option>
+                    <option value="TRANSFERENCIA" <%= entrada.metodo_pago === 'TRANSFERENCIA' ? 'selected' : '' %>>TRANSFERENCIA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="estado"><i class="fas fa-check-circle"></i> Estado</label>
+                <select id="estado" name="estado" class="form-control" required>
+                    <option value="PAGADA" <%= entrada.estado === 'PAGADA' ? 'selected' : '' %>>PAGADA</option>
+                    <option value="RESERVADA" <%= entrada.estado === 'RESERVADA' ? 'selected' : '' %>>RESERVADA</option>
+                    <option value="CANCELADA" <%= entrada.estado === 'CANCELADA' ? 'selected' : '' %>>CANCELADA</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="total"><i class="fas fa-dollar-sign"></i> Total</label>
+            <input type="number" min="0.01" step="0.01" id="total" name="total" class="form-control" required value="<%= entrada.total %>">
+        </div>
+
+        <% if (error_msg) { %><div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i><%= error_msg %></div><% } %>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+            <a href="/entradas" class="btn btn-warning"><i class="fas fa-times"></i> Cancelar</a>
+        </div>
+    </form>
+</div>

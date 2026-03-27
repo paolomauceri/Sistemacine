@@ -1,0 +1,70 @@
+<div class="header-actions">
+    <h2><i class="fas fa-user-tie"></i> Vendedores</h2>
+    <a href="/auth/register-seller" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i>
+        Nuevo Vendedor
+    </a>
+</div>
+
+<div class="method-badge">
+    <span class="badge get">GET</span>
+    <span class="badge post">POST</span>
+    <span class="badge put">PUT</span>
+    <span class="badge delete">DELETE</span>
+</div>
+
+<form action="/auth/sellers" method="GET" style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+    <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Buscar por nombre o email"
+        value="<%= search || '' %>"
+        style="max-width: 360px;"
+    >
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-search"></i>
+        Buscar
+    </button>
+    <% if (search) { %>
+        <a href="/auth/sellers" class="btn btn-warning">
+            <i class="fas fa-eraser"></i>
+            Limpiar
+        </a>
+    <% } %>
+</form>
+
+<% if (!vendedores || vendedores.length === 0) { %>
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <%= search ? ('No hay vendedores que coincidan con "' + search + '".') : 'No hay vendedores registrados.' %>
+    </div>
+<% } else { %>
+    <div class="data-grid">
+        <% vendedores.forEach(vendedor => { %>
+            <div class="card">
+                <div class="card-header">
+                    <h3><%= vendedor.nombre %></h3>
+                    <span class="card-badge">ID: <%= vendedor.id %></span>
+                </div>
+                <div class="card-body">
+                    <p><i class="fas fa-envelope"></i><strong>Email:</strong> <%= vendedor.email %></p>
+                    <p><i class="fas fa-id-badge"></i><strong>Rol:</strong> VENDEDOR</p>
+                    <p><i class="fas fa-calendar"></i><strong>Creado:</strong> <%= new Date(vendedor.created_at).toLocaleDateString('es-CO') %></p>
+                </div>
+                <div class="card-footer">
+                    <a href="/auth/sellers/<%= vendedor.id %>/edit" class="btn btn-warning">
+                        <i class="fas fa-edit"></i>
+                        Editar
+                    </a>
+                    <form action="/auth/sellers/<%= vendedor.id %>?_method=DELETE" method="POST" style="flex:1;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar este vendedor?')">
+                            <i class="fas fa-trash"></i>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+<% } %>

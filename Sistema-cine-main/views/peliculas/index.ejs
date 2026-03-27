@@ -1,0 +1,79 @@
+﻿<!-- views/peliculas/index.ejs -->
+<div class="header-actions">
+    <h2>
+        <i class="fas fa-film"></i>
+        Catálogo de Películas
+    </h2>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/peliculas/nueva" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i>
+            Nueva Película
+        </a>
+    <% } %>
+</div>
+
+<div class="method-badge">
+    <span class="badge get">GET</span>
+    <span class="badge post">POST</span>
+    <span class="badge put">PUT</span>
+    <span class="badge delete">DELETE</span>
+</div>
+
+<% if (peliculas.length === 0) { %>
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        No hay películas registradas. ¡Crea la primera!
+    </div>
+<% } else { %>
+    <div class="data-grid">
+        <% peliculas.forEach(pelicula => { %>
+            <div class="card">
+                <div class="card-header">
+                    <h3><%= pelicula.titulo %></h3>
+                    <span class="card-badge">ID: <%= pelicula.id %></span>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <i class="fas fa-tag"></i>
+                        <strong>Género:</strong> <%= pelicula.genero %>
+                    </p>
+                    <p>
+                        <i class="fas fa-clock"></i>
+                        <strong>Duración:</strong> <%= pelicula.duracion %> minutos
+                    </p>
+                    <p>
+                        <i class="fas fa-certificate"></i>
+                        <strong>Clasificación:</strong> 
+                        <span class="badge" style="background: <%= 
+                            pelicula.clasificacion === 'PG-13' ? '#4cc9f0' : 
+                            pelicula.clasificacion === 'R' ? '#f72585' : '#f8961e' 
+                        %>">
+                            <%= pelicula.clasificacion %>
+                        </span>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <% if (currentUser && currentUser.role === 'admin') { %>
+                        <a href="/peliculas/<%= pelicula.id %>/editar" class="btn btn-warning">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </a>
+                        <form action="/peliculas/<%= pelicula.id %>?_method=DELETE" method="POST" style="flex:1;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar esta película?')">
+                                <i class="fas fa-trash"></i>
+                                Eliminar
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <a href="/ventas/rapida?funcion_id=" class="btn btn-success" style="pointer-events:none;opacity:0.7;">
+                            <i class="fas fa-shopping-cart"></i>
+                            Comprar desde Funciones
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+<% } %>
+
+<!-- Sección de API eliminada -->

@@ -1,0 +1,103 @@
+﻿<!-- views/peliculas/editar.ejs -->
+<div class="form-container">
+    <div class="form-title">
+        <h2>
+            <i class="fas fa-edit"></i>
+            Editar Película
+        </h2>
+        <p>Modifica los datos de la película</p>
+    </div>
+
+    <div class="method-badge">
+        <span class="badge put">Método: PUT</span>
+    </div>
+
+    <form action="/peliculas/<%= pelicula.id %>?_method=PUT" method="POST">
+        <div class="form-group">
+            <label for="titulo">
+                <i class="fas fa-heading"></i>
+                Título de la película
+            </label>
+            <input type="text" class="form-control" id="titulo" name="titulo" 
+                value="<%= pelicula.titulo %>" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="genero">
+                    <i class="fas fa-tag"></i>
+                    Género
+                </label>
+                <select class="form-control" id="genero" name="genero" required>
+                    <option value="Acción" <%= pelicula.genero === 'Acción' ? 'selected' : '' %>>Acción</option>
+                    <option value="Comedia" <%= pelicula.genero === 'Comedia' ? 'selected' : '' %>>Comedia</option>
+                    <option value="Drama" <%= pelicula.genero === 'Drama' ? 'selected' : '' %>>Drama</option>
+                    <option value="Ciencia Ficción" <%= pelicula.genero === 'Ciencia Ficción' ? 'selected' : '' %>>Ciencia Ficción</option>
+                    <option value="Terror" <%= pelicula.genero === 'Terror' ? 'selected' : '' %>>Terror</option>
+                    <option value="Animación" <%= pelicula.genero === 'Animación' ? 'selected' : '' %>>Animación</option>
+                    <option value="Aventura" <%= pelicula.genero === 'Aventura' ? 'selected' : '' %>>Aventura</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="duracion">
+                    <i class="fas fa-hourglass-half"></i>
+                    Duración (minutos)
+                </label>
+                <input type="number" class="form-control" id="duracion" name="duracion" 
+                    value="<%= pelicula.duracion %>" min="1" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="clasificacion">
+                <i class="fas fa-certificate"></i>
+                Clasificación
+            </label>
+            <select class="form-control" id="clasificacion" name="clasificacion" required>
+                <option value="G" <%= pelicula.clasificacion === 'G' ? 'selected' : '' %>>G - Todo público</option>
+                <option value="PG" <%= pelicula.clasificacion === 'PG' ? 'selected' : '' %>>PG - Guía parental</option>
+                <option value="PG-13" <%= pelicula.clasificacion === 'PG-13' ? 'selected' : '' %>>PG-13 - Mayores de 13</option>
+                <option value="R" <%= pelicula.clasificacion === 'R' ? 'selected' : '' %>>R - Restringido</option>
+                <option value="NC-17" <%= pelicula.clasificacion === 'NC-17' ? 'selected' : '' %>>NC-17 - Adultos</option>
+            </select>
+        </div>
+
+        <% if (error_msg) { %>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                <%= error_msg %>
+            </div>
+        <% } %>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Actualizar Película
+            </button>
+            <a href="/peliculas" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-3px);
+}
+</style>

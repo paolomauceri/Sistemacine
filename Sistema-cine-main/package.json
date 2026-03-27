@@ -1,0 +1,27 @@
+﻿{
+  "name": "sistema-cine",
+  "version": "2.0.0",
+  "description": "Sistema de Gestión de Cine con interfaz amigable",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "seed": "node scripts/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0",
+    "ejs": "^3.1.9",
+    "express-ejs-layouts": "^2.5.1",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1",
+    "method-override": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "express-session": "^1.17.3",
+    "connect-flash": "^0.1.1",
+    "express-validator": "^7.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

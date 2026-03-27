@@ -1,0 +1,255 @@
+﻿<!-- views/index.ejs -->
+<div class="hero fade-in">
+    <div class="hero-content">
+        <h2>Bienvenido a CineManager</h2>
+        <p>Sistema profesional de gestión de cines con base de datos MySQL</p>
+        <% if (currentUser && currentUser.role === 'admin') { %>
+            <p style="margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <a href="/auth/register-seller" class="btn btn-warning">
+                    <i class="fas fa-user-tie"></i>
+                    Crear vendedor
+                </a>
+                <a href="/auth/sellers" class="btn btn-primary">
+                    <i class="fas fa-users-cog"></i>
+                    Gestionar vendedores
+                </a>
+            </p>
+        <% } %>
+    </div>
+</div>
+
+<% const canViewSalesAndTickets = currentUser && (currentUser.role === 'admin' || currentUser.role === 'seller'); %>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-film"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Películas</h3>
+            <div class="stat-number"><%= totalPeliculas || 0 %></div>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-door-open"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Salas</h3>
+            <div class="stat-number"><%= totalSalas || 0 %></div>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Funciones</h3>
+            <div class="stat-number"><%= totalFunciones || 0 %></div>
+        </div>
+    </div>
+
+    <% if (canViewSalesAndTickets) { %>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Entradas</h3>
+                <div class="stat-number"><%= totalEntradas || 0 %></div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-cash-register"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Ventas</h3>
+                <div class="stat-number"><%= totalVentas || 0 %></div>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="fas fa-box-open"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Productos</h3>
+            <div class="stat-number"><%= totalProductos || 0 %></div>
+        </div>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>
+        <i class="fas fa-code"></i>
+        Métodos HTTP Implementados
+    </h3>
+    <ul>
+        <li>
+            <span class="badge get">GET</span>
+            <code>http://localhost:3000/api/peliculas</code>
+            <span>Obtener todas las películas</span>
+        </li>
+        <li>
+            <span class="badge get">GET</span>
+            <code>http://localhost:3000/api/peliculas/:id</code>
+            <span>Obtener una película</span>
+        </li>
+        <li>
+            <span class="badge post">POST</span>
+            <code>http://localhost:3000/api/peliculas</code>
+            <span>Crear nueva película</span>
+        </li>
+        <li>
+            <span class="badge put">PUT</span>
+            <code>http://localhost:3000/api/peliculas/:id</code>
+            <span>Actualizar película</span>
+        </li>
+        <li>
+            <span class="badge delete">DELETE</span>
+            <code>http://localhost:3000/api/peliculas/:id</code>
+            <span>Eliminar película</span>
+        </li>
+        <li>
+            <span class="badge get">GET</span>
+            <code>http://localhost:3000/api/ventas</code>
+            <span>Obtener ventas registradas</span>
+        </li>
+        <li>
+            <span class="badge post">POST</span>
+            <code>http://localhost:3000/api/entradas</code>
+            <span>Crear una entrada</span>
+        </li>
+        <li>
+            <span class="badge get">GET</span>
+            <code>http://localhost:3000/api/funciones</code>
+            <span>Listar funciones programadas</span>
+        </li>
+    </ul>
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <i class="fas fa-film"></i>
+        <h3>Gestión de Películas</h3>
+        <p>Administra el catálogo completo de películas</p>
+        <a href="/peliculas" class="btn btn-primary">
+            <i class="fas fa-arrow-right"></i>
+            Ir a Películas
+        </a>
+    </div>
+    
+    <div class="feature-card">
+        <i class="fas fa-door-open"></i>
+        <h3>Gestión de Salas</h3>
+        <p>Configura las salas y su capacidad</p>
+        <a href="/salas" class="btn btn-primary">
+            <i class="fas fa-arrow-right"></i>
+            Ir a Salas
+        </a>
+    </div>
+
+    <div class="feature-card">
+        <i class="fas fa-calendar-alt"></i>
+        <h3>Gestión de Funciones</h3>
+        <p>Programa horarios por película y sala</p>
+        <a href="/funciones" class="btn btn-primary">
+            <i class="fas fa-arrow-right"></i>
+            Ir a Funciones
+        </a>
+    </div>
+
+    <% if (canViewSalesAndTickets) { %>
+        <div class="feature-card">
+            <i class="fas fa-ticket-alt"></i>
+            <h3>Gestión de Entradas</h3>
+            <p>Controla reservas y pagos de entradas</p>
+            <a href="/entradas" class="btn btn-primary">
+                <i class="fas fa-arrow-right"></i>
+                Ir a Entradas
+            </a>
+        </div>
+
+        <div class="feature-card">
+            <i class="fas fa-cash-register"></i>
+            <h3>Gestión de Ventas</h3>
+            <p>Registra comprobantes y totales</p>
+            <a href="/ventas" class="btn btn-primary">
+                <i class="fas fa-arrow-right"></i>
+                Ir a Ventas
+            </a>
+        </div>
+    <% } %>
+
+    <div class="feature-card">
+        <i class="fas fa-box-open"></i>
+        <h3>Gestión de Productos</h3>
+        <p>Administra snacks, bebidas y combos</p>
+        <a href="/productos" class="btn btn-primary">
+            <i class="fas fa-arrow-right"></i>
+            Ir a Productos
+        </a>
+    </div>
+</div>
+
+<style>
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+.feature-card p {
+    color: var(--gray-color);
+    margin-bottom: 1.5rem;
+}
+</style>

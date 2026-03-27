@@ -1,0 +1,50 @@
+<div class="form-container">
+    <div class="form-title">
+        <h2><i class="fas fa-receipt"></i> Ticket de Compra</h2>
+        <p>Compra registrada exitosamente</p>
+    </div>
+
+    <div class="card" style="margin-top: 10px;">
+        <div class="card-header">
+            <h3>Ticket #<%= ticket.venta_id %></h3>
+            <span class="card-badge">Entrada #<%= ticket.entrada_id %></span>
+        </div>
+        <div class="card-body">
+            <p><i class="fas fa-film"></i> <strong>Pelicula:</strong> <%= ticket.pelicula_titulo %></p>
+            <p><i class="fas fa-door-open"></i> <strong>Sala:</strong> <%= ticket.sala_nombre %></p>
+            <p><i class="fas fa-calendar-alt"></i> <strong>Funcion:</strong> <%= ticket.fecha %> <%= ticket.hora %></p>
+            <p><i class="fas fa-user"></i> <strong>Cliente:</strong> <%= ticket.cliente_nombre %></p>
+            <p><i class="fas fa-couch"></i> <strong>Asientos:</strong> <%= ticket.asientos %></p>
+            <hr style="margin: 12px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <p><i class="fas fa-ticket-alt"></i> <strong>Entradas:</strong> <%= ticket.cantidad_entradas %> x $<%= Number(ticket.precio_entrada_unitario).toFixed(2) %> = $<%= Number(ticket.subtotal_entradas).toFixed(2) %></p>
+            <% if (ticket.snack_detalle) { %>
+                <p><i class="fas fa-popcorn"></i> <strong>Snack:</strong> <%= ticket.snack_detalle %> = $<%= Number(ticket.snack_subtotal).toFixed(2) %></p>
+            <% } %>
+            <% if (ticket.bebida_detalle) { %>
+                <p><i class="fas fa-glass-cheers"></i> <strong>Bebida:</strong> <%= ticket.bebida_detalle %> = $<%= Number(ticket.bebida_subtotal).toFixed(2) %></p>
+            <% } %>
+            <hr style="margin: 12px 0; border: none; border-top: 1px solid #e2e8f0;">
+            <p><i class="fas fa-calculator"></i> <strong>Subtotal:</strong> $<%= Number(ticket.subtotal).toFixed(2) %></p>
+            <p><i class="fas fa-percentage"></i> <strong>Descuento:</strong> $<%= Number(ticket.descuento).toFixed(2) %></p>
+            <p><i class="fas fa-file-invoice-dollar"></i> <strong>Impuesto:</strong> $<%= Number(ticket.impuesto).toFixed(2) %></p>
+            <p style="font-size: 1.1rem;"><i class="fas fa-dollar-sign"></i> <strong>Total pagado:</strong> $<%= Number(ticket.total).toFixed(2) %></p>
+            <p><i class="fas fa-credit-card"></i> <strong>Metodo de pago:</strong> <%= ticket.metodo_pago %></p>
+            <p><i class="fas fa-align-left"></i> <strong>Descripcion:</strong> <%= ticket.descripcion %></p>
+            <p><i class="fas fa-clock"></i> <strong>Emitido:</strong> <%= new Date(ticket.fecha_emision).toLocaleString('es-CO') %></p>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <% if (currentUser && currentUser.role === 'admin') { %>
+            <a href="/ventas" class="btn btn-primary"><i class="fas fa-list"></i> Ver Ventas</a>
+        <% } else if (currentUser && currentUser.role === 'seller') { %>
+            <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Ticket</button>
+            <a href="/ventas/rapida" class="btn btn-success"><i class="fas fa-bolt"></i> Venta Rapida</a>
+            <a href="/ventas" class="btn btn-warning"><i class="fas fa-list"></i> Volver a Ventas</a>
+        <% } else { %>
+            <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Ticket</button>
+            <a href="/ventas/rapida" class="btn btn-success"><i class="fas fa-bolt"></i> Nueva Compra</a>
+            <a href="/" class="btn btn-warning"><i class="fas fa-home"></i> Volver al Inicio</a>
+        <% } %>
+    </div>
+</div>

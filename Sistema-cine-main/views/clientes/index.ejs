@@ -1,0 +1,48 @@
+<div class="header-actions">
+    <h2><i class="fas fa-users"></i> Clientes</h2>
+    <a href="/clientes/nueva" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i>
+        Nuevo Cliente
+    </a>
+</div>
+
+<div class="method-badge">
+    <span class="badge get">GET</span>
+    <span class="badge post">POST</span>
+    <span class="badge put">PUT</span>
+    <span class="badge delete">DELETE</span>
+</div>
+
+<% if (clientes.length === 0) { %>
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        No hay clientes registrados.
+    </div>
+<% } else { %>
+    <div class="data-grid">
+        <% clientes.forEach(cliente => { %>
+            <div class="card">
+                <div class="card-header">
+                    <h3><%= cliente.nombre %></h3>
+                    <span class="card-badge">ID: <%= cliente.id %></span>
+                </div>
+                <div class="card-body">
+                    <p><i class="fas fa-envelope"></i><strong>Email:</strong> <%= cliente.email %></p>
+                    <p><i class="fas fa-phone"></i><strong>Telefono:</strong> <%= cliente.telefono || 'N/A' %></p>
+                </div>
+                <div class="card-footer">
+                    <a href="/clientes/<%= cliente.id %>/editar" class="btn btn-warning">
+                        <i class="fas fa-edit"></i>
+                        Editar
+                    </a>
+                    <form action="/clientes/<%= cliente.id %>?_method=DELETE" method="POST" style="flex:1;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar este cliente?')">
+                            <i class="fas fa-trash"></i>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+<% } %>

@@ -1,0 +1,78 @@
+﻿<!-- views/salas/index.ejs -->
+<div class="header-actions">
+    <h2>
+        <i class="fas fa-door-open"></i>
+        Gestión de Salas
+    </h2>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/salas/nueva" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i>
+            Nueva Sala
+        </a>
+    <% } %>
+</div>
+
+<div class="method-badge">
+    <span class="badge get">GET</span>
+    <span class="badge post">POST</span>
+    <span class="badge put">PUT</span>
+    <span class="badge delete">DELETE</span>
+</div>
+
+<% if (salas.length === 0) { %>
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        No hay salas registradas. ¡Crea la primera!
+    </div>
+<% } else { %>
+    <div class="data-grid">
+        <% salas.forEach(sala => { %>
+            <div class="card">
+                <div class="card-header">
+                    <h3><%= sala.nombre %></h3>
+                    <span class="card-badge">ID: <%= sala.id %></span>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <i class="fas fa-users"></i>
+                        <strong>Capacidad:</strong> <%= sala.capacidad %> personas
+                    </p>
+                    <p>
+                        <i class="fas fa-film"></i>
+                        <strong>Tipo:</strong> 
+                        <span class="badge" style="background: <%= 
+                            sala.tipo === 'VIP' ? '#f72585' : 
+                            sala.tipo === 'IMAX' ? '#f8961e' : 
+                            sala.tipo === '3D' ? '#4cc9f0' : '#6c757d' 
+                        %>">
+                            <%= sala.tipo %>
+                        </span>
+                    </p>
+                    <p>
+                        <i class="fas fa-volume-up"></i>
+                        <strong>Dolby:</strong> 
+                        <span class="badge" style="background: <%= sala.tiene_dolby ? '#28a745' : '#6c757d' %>">
+                            <%= sala.tiene_dolby ? 'Sí' : 'No' %>
+                        </span>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <% if (currentUser && currentUser.role === 'admin') { %>
+                        <a href="/salas/<%= sala.id %>/editar" class="btn btn-warning">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </a>
+                        <form action="/salas/<%= sala.id %>?_method=DELETE" method="POST" style="flex:1;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar esta sala?')">
+                                <i class="fas fa-trash"></i>
+                                Eliminar
+                            </button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+<% } %>
+
+<!-- Sección de API eliminada -->

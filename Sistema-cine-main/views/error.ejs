@@ -1,0 +1,50 @@
+﻿<!-- views/error.ejs -->
+<div class="error-container">
+    <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h2>Ha ocurrido un error</h2>
+    <p class="error-message"><%= message %></p>
+    <a href="/" class="btn btn-primary">
+        <i class="fas fa-home"></i>
+        Volver al inicio
+    </a>
+</div>
+
+<style>
+.error-container {
+    text-align: center;
+    padding: 60px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.error-icon {
+    font-size: 5rem;
+    color: #f72585;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.error-container h2 {
+    color: #1e1e2f;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.error-message {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8d7da;
+    border-radius: 12px;
+    border-left: 4px solid #dc3545;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+</style>
